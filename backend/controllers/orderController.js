@@ -47,10 +47,21 @@ const updateStatus = async (req, res, next) => {
     }
 };
 
+const generateHash = async (req, res, next) => {
+    try {
+        const { order_id, amount } = req.body;
+        const hash = orderService.getPaymentHash(order_id, amount);
+        Msg(res, 'Hash generated', { hash });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     placeOrder,
     getAllOrders,
     getOrder,
     getMyOrders,
-    updateStatus
+    updateStatus,
+    generateHash,
 };
