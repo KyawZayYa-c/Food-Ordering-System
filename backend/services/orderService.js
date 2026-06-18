@@ -1,4 +1,4 @@
-import Order from '../model/Order';
+const Order = require('../model/Order');
 
 const createOrder = async (orderData)=>{
     const newOrder = new Order(orderData);

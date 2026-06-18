@@ -1,0 +1,29 @@
+const User = require('../model/User');
+const bcrypt = require('bcrypt');
+
+const registerUser = async (userData) => {
+    const { password, email, phone } = userData;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ ...userData, password: hashedPassword });
+    return await user.save();
+}
+
+const loginUser = async (email, password) => {
+    const user = await User.findOne({ email });
+    if (!user) throw new Error("User not found");
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) throw new Error("Invalid credentials");
+
+    return user;
+};
+
+const getUserById = async (id) => {
+    return await User.findById(id).select('-password'); 
+};
+
+module.exports = {
+    registerUser,
+    loginUser,
+    getUserById
+};

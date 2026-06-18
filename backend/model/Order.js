@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
     customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     items: [{
         product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-        quality: { type: Number, required: true }
+        quantity: { type: Number, required: true }
     }],
     total_amount: { type: Number, required: true },
     status: {
@@ -14,4 +14,6 @@ const orderSchema = new mongoose.Schema({
     },
     payment_status: { type: String, default: 'Pending' },
     payment_id: { type: String }
-}, {timestamps : true});
+}, { timestamps: true });
+
+module.exports = mongoose.model('Order', orderSchema);

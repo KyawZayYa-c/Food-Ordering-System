@@ -1,5 +1,5 @@
-import orderService from '../services/orderService';
-import { Msg } from '../utils/util'; 
+const orderService = require('../services/orderService');
+const { Msg } = require('../utils/util');
 
 const placeOrder = async (req, res, next) => {
     try {
@@ -10,7 +10,7 @@ const placeOrder = async (req, res, next) => {
     }
 };
 
-const getOrders = async (req, res, next) => {
+const getAllOrders = async (req, res, next) => {
     try {
         const orders = await orderService.getAllOrders();
         Msg(res, 'Orders fetched successfully', orders);
@@ -47,4 +47,10 @@ const updateStatus = async (req, res, next) => {
     }
 };
 
-module.exports = { placeOrder, getOrders, getOrder, getMyOrders, updateStatus };
+module.exports = {
+    placeOrder,
+    getAllOrders,
+    getOrder,
+    getMyOrders,
+    updateStatus
+};
