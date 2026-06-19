@@ -21,7 +21,11 @@ const getProduct = async (req, res, next) => {
 
 const addProduct = async (req, res, next) => {
     try {
-        const product = await productService.createProduct(req.body);
+        const productData = req.body;
+        if (req.file) {
+            productData.image_url = `/uploads/${req.file.filename}`;
+        }
+        const product = await productService.createProduct(productData);
         Msg(res, "Product add successfully", 201)
     } catch (error) {
         next(error);

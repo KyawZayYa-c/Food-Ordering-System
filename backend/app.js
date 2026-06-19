@@ -5,11 +5,16 @@ const productRoute = require('./routes/productRoute');
 const orderRoute = require('./routes/orderRoute');
 const userRoute = require('./routes/userRoute');
 const morgan = require('morgan');
+const cors = require('cors');
+const helmet = require('helmet');
 const connectDB = require('./config/db');
 const app = express();
+
+app.use(cors());
+app.use(helmet())
 app.use(express.json());
 app.use(morgan('dev'));
-
+app.use('/uploads', express.static('uploads'));
 
 connectDB();
 

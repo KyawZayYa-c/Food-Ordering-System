@@ -53,7 +53,7 @@ const getPaymentHash = (order_id, amount) => {
     const merchant_secret = process.env.PAYHERE_MERCHANT_SECRET;
     const currency = 'LKR';
     
-    // Hash တွက်ချက်ခြင်း
+    // Hash calculate
     let hashedSecret = crypto.createHash('md5').update(merchant_secret).digest('hex').toUpperCase();
     let hash = crypto.createHash('md5').update(merchant_id + order_id + parseFloat(amount).toFixed(2) + currency + hashedSecret).digest('hex').toUpperCase();
     
