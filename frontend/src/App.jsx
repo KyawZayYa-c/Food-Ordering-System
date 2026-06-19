@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './dashboard/Dashboard'; 
 function App() {
   return (
-    <MantineProvider>
+    <MantineProvider> 
       <Notifications />
       <BrowserRouter>
         <Routes>

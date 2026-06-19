@@ -18,7 +18,7 @@ import {
 } from '@tabler/icons-react';
 import Sidebar from './components/Sidebar';
 import { Routes, Route } from 'react-router-dom';
-import FoodPage from './food/FoodPage';
+import ProductPage from './product/ProductPage';
 import OrdersPage from './order/OrdersPage';
 import CustomerPage from './customer/CustomerPage';
 import Overview from './overview/Overview';
@@ -82,15 +82,13 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <AppShell.Main>
-        <Container fluid p="md">
-          <AppShell.Main>
+        <Container fluid p="sm">
             <Routes>
               <Route path="/dashboard/overviews" element={<Overview />} />
               <Route path="/dashboard/customers" element={<CustomerPage />} />
-              <Route path="/dashboard/foods" element={<FoodPage />} />
+              <Route path="/dashboard/foods" element={<ProductPage />} />
               <Route path="/dashboard/orders" element={<OrdersPage />} />
             </Routes>
-          </AppShell.Main>
         </Container>
       </AppShell.Main>
     </AppShell>

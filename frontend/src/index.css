@@ -20,3 +20,9 @@ body {
 *::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+.my-dropzone {
+  border: 1px dashed #228be6; /* ဒါက blue-6 ပါ */
+  border-radius: 12px;
+  background-color: #f8f9fa;
+}
