@@ -75,18 +75,18 @@ export default function Dashboard() {
         </Group>
       </AppShell.Header>
 
-      {/* ှSidebar */}
+      {/* Sidebar */}
       <Sidebar />
 
       {/* Main Content */}
       <AppShell.Main>
         <Container fluid p="sm">
-            <Routes>
-              <Route path="/dashboard/overviews" element={<Overview />} />
-              <Route path="/dashboard/customers" element={<CustomerPage />} />
-              <Route path="/dashboard/products" element={<ProductPage />} />
-              <Route path="/dashboard/orders" element={<OrdersPage />} />
-            </Routes>
+              <Routes>
+                <Route path="/overviews" element={<Overview />} />
+                <Route path="/customers" element={<CustomerPage />} />
+                <Route path="/products" element={<ProductPage />} />
+                <Route path="/orders" element={<OrdersPage />} />
+              </Routes>
         </Container>
       </AppShell.Main>
     </AppShell>

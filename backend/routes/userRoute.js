@@ -6,5 +6,5 @@ const routes = express.Router();
 routes.post('/register', userController.register);
 routes.post('/login', userController.login);
 routes.get('/profile', protect, userController.getProfile);
-
+routes.post('/logout', userController.logout);
 module.exports = routes;

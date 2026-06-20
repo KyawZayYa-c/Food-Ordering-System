@@ -6,26 +6,51 @@ const register = async (req, res, next) => {
     try {
         const user = await userService.registerUser(req.body);
         const token = generateToken(user);
-        Msg(res, 'User registerd successfuly', { user, token }, 201)
-    } catch (error) {
-        next(error)
-    }
-}
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 3600000 // 1 hour
+        });
 
-const login = async (req, res, next)=>{
-    try {
-        const { email, password } = req.body;
-        const user = await userService.loginUser(email, password);
-        const token = generateToken(user);
-        Msg(res, 'Login successful', {
-            userId: user._id,
-            role: user.role,
-            token
-        })
+        Msg(res, 'User registered successfully', { 
+            userId: user._id, 
+            role: user.role 
+        }, 201);
     } catch (error) {
         next(error);
     }
 }
+
+const login = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+        const user = await userService.loginUser(email, password);
+        const token = generateToken(user);
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 3600000
+        });
+
+        Msg(res, 'Login successful', {
+            userId: user._id,
+            role: user.role
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+const logout = async (req, res) => {
+    res.cookie('token', '', {
+        httpOnly: true,
+        expires: new Date(0), 
+    });
+    Msg(res, 'Logged out successfully');
+};
 
 const getProfile = async (req, res, next) => {
     try {
@@ -39,5 +64,6 @@ const getProfile = async (req, res, next) => {
 module.exports = {
     register, 
     login,
+    logout,
     getProfile,
 }

@@ -18,11 +18,11 @@ const getOrderById = async (orderId) => {
     return orders;
 }
 /**
-// orderService.js ထဲမှာ
+// orderService.js 
 const getAllOrders = async () => {
     return await Order.find()
-        .populate('customer', 'name email phone') // User ရဲ့ Name, Email, Phone ကို ဆွဲထုတ်မယ်
-        .populate('items.product', 'name price');  // Product ရဲ့ Name နဲ့ Price ကို ဆွဲထုတ်မယ်
+        .populate('customer', 'name email phone') // User  Name, Email, Phone 
+        .populate('items.product', 'name price');  // Product Name  Price
 }
 
 const getOrderById = async (orderId) => {

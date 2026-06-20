@@ -18,11 +18,25 @@ import {
   IconCategory,
 } from '@tabler/icons-react';
 
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useGetProfileQuery, useLogoutMutation } from '../../../lib/features/auth/authApiSlice';
 export default function Sidebar() {
     
-    const location = useLocation();
-    const isSelected = (path) => location.pathname === path;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { data: user } = useGetProfileQuery(); 
+  const [logout] = useLogoutMutation(); 
+  const isSelected = (path) => location.pathname === path;
+  
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+      navigate('/login'); 
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
     return (
          <AppShell.Navbar p="md">
                 <AppShell.Section grow component={ScrollArea} ml={-10} mr={-10} px={10}>
@@ -77,12 +91,14 @@ export default function Sidebar() {
                   <Stack gap="xs">
                     <Divider />
                     <Group>
-                      <Avatar color="blue" radius="xl">KZY</Avatar>
+                      {/* Dynamic User Data */}
+                      <Avatar color="blue" radius="xl">{user?.data?.name?.substring(0, 2).toUpperCase()}</Avatar>
                       <Box>
-                        <Text size="sm" fw={500}>Kyaw zay Ya</Text>
-                        <Text size="xs" c="dimmed">Admin</Text>
+                        <Text size="sm" fw={500}>{user?.data?.name || "User"}</Text>
+                        <Text size="xs" c="dimmed">{user?.data?.role || "Role"}</Text>
                       </Box>
-                      <ActionIcon variant="subtle" color="gray">
+                      {/* Logout Action */}
+                      <ActionIcon variant="subtle" color="gray" onClick={handleLogout}>
                         <IconLogout size={18} />
                       </ActionIcon>
                     </Group>
