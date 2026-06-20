@@ -23,12 +23,10 @@ import OrdersPage from './order/OrdersPage';
 import CustomerPage from './customer/CustomerPage';
 import Overview from './overview/Overview';
 
-
 export default function Dashboard() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   
-
   return (
     <AppShell
       header={{ height: 60 }}
@@ -86,7 +84,7 @@ export default function Dashboard() {
             <Routes>
               <Route path="/dashboard/overviews" element={<Overview />} />
               <Route path="/dashboard/customers" element={<CustomerPage />} />
-              <Route path="/dashboard/foods" element={<ProductPage />} />
+              <Route path="/dashboard/products" element={<ProductPage />} />
               <Route path="/dashboard/orders" element={<OrdersPage />} />
             </Routes>
         </Container>

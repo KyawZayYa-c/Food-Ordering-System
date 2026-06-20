@@ -1,7 +1,12 @@
 import { Card, Image , Text, Button, Group, Badge, Stack } from '@mantine/core'; 
 import { IconTrash, IconEdit } from '@tabler/icons-react';
+import { ImageURL } from '../../../../lib/api/BaseURL';
 
 const ProductUiCard = ({ product, onEdit }) => {
+  const imageSrc = product.image_url 
+    ? `${ImageURL}${product.image_url}` 
+    : 'https://placehold.co/400x400?text=No+Image';
+  
   const user = "admin";
 
   const onDelete = (id)=> {
@@ -12,12 +17,17 @@ const ProductUiCard = ({ product, onEdit }) => {
   return (
     <Card shadow="sm" padding="sm" radius="md" withBorder>
       <Card.Section>
-        <Image
-          src={product.image_url}
-          height={160}
-          alt={product.name}
-        />
-      </Card.Section>
+          <Image
+            crossOrigin="anonymous"
+            src={imageSrc}
+            h={160}
+            fit="cover" 
+            alt={product.name}
+            onError={(e) => {
+              e.target.src = 'https://placehold.co/400x400?text=Error';
+            }}
+          />
+        </Card.Section>
 
       <Stack mt="md" gap="xs">
        

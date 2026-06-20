@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput, NumberInput, Select, Textarea, Button, Image, Stack, Paper, Title, SimpleGrid, Group, Text, ActionIcon } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone'; 
 import { IconPhoto , IconX} from '@tabler/icons-react';
-import { productSchema, CATEGORY_OPTIONS } from "../../../../utils/schemas/productSchema"; 
+import { productSchema, CATEGORY_OPTIONS } from "../../../../lib/schemas/productSchema"; 
 import { useState } from "react";
 
 const AddProductForm = ({ onClose, editData }) => {

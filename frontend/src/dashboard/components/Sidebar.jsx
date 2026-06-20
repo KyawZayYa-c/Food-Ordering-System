@@ -42,8 +42,8 @@ export default function Sidebar() {
                     </Button>
                     <Button
                     component={Link}
-                    to = "/dashboard/foods"  
-                     variant={isSelected('/dashboard/foods') ? 'filled' : 'subtle'}
+                    to = "/dashboard/products"  
+                     variant={isSelected('/dashboard/products') ? 'filled' : 'subtle'}
                       leftSection={<IconCategory size={18} />}
                       fullWidth
                       justify="start"

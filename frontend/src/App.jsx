@@ -6,14 +6,14 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './dashboard/Dashboard'; 
 function App() {
   return (
-    <MantineProvider> 
-      <Notifications />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/*" element={<Dashboard />} />
-        </Routes>
-      </BrowserRouter>
-    </MantineProvider>
+      <MantineProvider> 
+          <Notifications />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/*" element={<Dashboard />} />
+              </Routes>
+            </BrowserRouter>
+        </MantineProvider>
   );
 }
 
