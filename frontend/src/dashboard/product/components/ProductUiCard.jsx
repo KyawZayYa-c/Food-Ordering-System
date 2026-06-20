@@ -1,18 +1,22 @@
 import { Card, Image , Text, Button, Group, Badge, Stack } from '@mantine/core'; 
 import { IconTrash, IconEdit } from '@tabler/icons-react';
 import { ImageURL } from '../../../../lib/api/BaseURL';
+import { useDeleteProductMutation } from '../../../../lib/features/product/productApiSlice';
+import { openConfirmModal } from '../../../../lib/modals/confirmModal';
 
 const ProductUiCard = ({ product, onEdit }) => {
+  const [deleteProduct] = useDeleteProductMutation();
+
+  const handleConfirmDelete = async () => {
+    deleteProduct(product._id);
+  };
+
+
   const imageSrc = product.image_url 
     ? `${ImageURL}${product.image_url}` 
     : 'https://placehold.co/400x400?text=No+Image';
   
   const user = "admin";
-
-  const onDelete = (id)=> {
-    console.log('Product deleted : ', id);
-  }
-
 
   return (
     <Card shadow="sm" padding="sm" radius="md" withBorder>
@@ -61,7 +65,12 @@ const ProductUiCard = ({ product, onEdit }) => {
                   leftSection={<IconTrash size={16} />} 
                   variant="light" 
                   color="red" 
-                  onClick={() => onDelete(product._id)}
+                 onClick={() => openConfirmModal({
+                      title: 'Delete Product',
+                      message: 'Are you sure you want to delete this product? This will remove the image and all data.',
+                      confirmLabel: 'Delete Now',
+                      onConfirm: handleConfirmDelete
+                    })}
                 >
                   Delete
                 </Button>

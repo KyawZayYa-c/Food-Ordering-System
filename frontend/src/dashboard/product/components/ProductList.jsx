@@ -1,5 +1,5 @@
 import { SimpleGrid } from "@mantine/core"
-import { mockProducts } from "./data";
+//import { mockProducts } from "./data";
 import ProductUiCard from "./ProductUiCard";
 import { useGetProductsQuery } from "../../../../lib/features/product/productApiSlice";
 import ProductLoading from "../../../components/ProductLoading";

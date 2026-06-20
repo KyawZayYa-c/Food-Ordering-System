@@ -31,19 +31,23 @@ const addProduct = async (req, res, next) => {
         next(error);
     }
 }
-
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms)); 
 const updateProduct = async (req, res, next) => {
     try {
-        const updatedProduct = await        productService
-            .updateProduct(req.params.id, req.body);
-        Msg(res, "Product updated", updatedProduct);
+        const id = req.params.id;
+        const updateData = { ...req.body };
+        const newImagePath = req.file ? `/uploads/${req.file.filename}` : null;
+         //await delay(3000);
+        const updatedProduct = await productService.updateProduct(id, updateData, newImagePath);
+        Msg(res, 'Product updated', updatedProduct);
     } catch (error) {
         next(error);
     }
-}
+};
 
 const deletePrduct = async (req, res, next) => {
     try {
+       //await delay(3000);
         await productService.deleteProduct(req.params.id);
         Msg(res, 'Prdouct deleted');
     } catch (error) {

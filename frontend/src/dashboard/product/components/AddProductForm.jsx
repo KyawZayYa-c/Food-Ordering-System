@@ -5,9 +5,13 @@ import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { IconPhoto , IconX} from '@tabler/icons-react';
 import { productSchema, CATEGORY_OPTIONS } from "../../../../lib/schemas/productSchema"; 
 import { useState } from "react";
+import { useAddProductMutation, useUpdateProductMutation } from "../../../../lib/features/product/productApiSlice";
+import { ImageURL } from "../../../../lib/api/BaseURL";
 
 const AddProductForm = ({ onClose, editData }) => {
   const [file, setFile] = useState(null);
+  const [addProduct] = useAddProductMutation();
+  const [updateProduct ] = useUpdateProductMutation();
   const {
     register,
     handleSubmit,
@@ -26,22 +30,28 @@ const AddProductForm = ({ onClose, editData }) => {
   });
 
   const handleFormSubmit = async (data) => {
-    try {
-        const finalData = {
-            ...data,
-            image_url: file, 
-          };
-            
+      try {
+        const formData = new FormData();
+        formData.append("name", data.name);
+        formData.append("description", data.description);
+        formData.append("price", data.price);
+        formData.append("category", data.category);
+        if (file) {
+          formData.append("image", file);
+        }
         if (editData) {
-        console.log('Updating product with ID:', editData.id);
-        console.log('Update Data:', finalData);
+          console.log('edit product : ', editData);
+        await updateProduct({ id: editData._id, body: formData }).unwrap();
       } else {
-        console.log('Adding new product Data:', finalData);
+        await addProduct(formData).unwrap();
       }
-      reset();
+        
+        reset();
+        setFile(null);
         onClose();
-      } catch (error) {
-           console.log('error is ', error);
+      } catch (err) {
+        console.error('API Error:', err);
+        alert(err.data?.message || "Something went wrong!");
       }
     };
   return (
@@ -99,7 +109,16 @@ const AddProductForm = ({ onClose, editData }) => {
               >
                 {file ? (
                   <>
-                    <Image src={URL.createObjectURL(file)} w={60} h={60} radius="sm" fit="cover" />
+                  <Image
+                    src={URL.createObjectURL(file)}
+                    w={60}
+                    h={60}
+                    radius="sm"
+                    fit="cover"
+                    onError={(e) => {
+                      console.error("Image loading error for:", e.target.src);
+                      e.target.src = 'https://placehold.co/60x60?text=Error'; 
+                    }} />
                     
                     <Text fw={500} size="sm" style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {file.name}
@@ -116,7 +135,24 @@ const AddProductForm = ({ onClose, editData }) => {
                       <IconX size={18} />
                     </ActionIcon>
                   </>
-                ) : (
+                ) : editData?.image_url ? (
+                  <>
+                    <Image
+                      crossOrigin="anonymous"
+                      src={`${ImageURL}${editData?.image_url}`}
+                      w={60}
+                      h={60}
+                      radius="sm"
+                      fit="cover"
+                      onError={(e) => {
+                        console.error("Image loading error for:", e.target.src);
+                        e.target.src = 'https://placehold.co/60x60?text=Error';
+                      }} />
+                    <Text fw={500} size="sm" style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }} >
+                    {editData.name}
+                    </Text>
+                  </>
+                ) :(
                   <Group justify="center" style={{ width: '100%' }}>
                     <IconPhoto size={30} />
                     <Text size="sm">Drag images or click to select</Text>
@@ -127,7 +163,7 @@ const AddProductForm = ({ onClose, editData }) => {
 
           <Textarea label="Description" {...register("description")} error={errors.description?.message} />
 
-          <Button type="submit" fullWidth >Save Product</Button>
+          <Button type="submit" fullWidth >{editData ? 'Update ' : 'Save '}  Product</Button>
         </Stack>
       </form>
     </Paper>
