@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput,Center, Container, Text , Anchor, PasswordInput, Button, Stack, Paper, Title } from "@mantine/core";
-import { registerSchema } from "../../lib/schemas/authSchema";
+import { registerSchema } from "../lib/schemas/authSchema";
 import { Link, useNavigate } from "react-router-dom";
-import { useRegisterMutation } from "../../lib/features/auth/authApiSlice";
+import { useRegisterMutation } from "../lib/features/auth/authApiSlice";
 const RegisterForm = () => {
     const navigate = useNavigate();
   const [registerUser, { isLoading }] = useRegisterMutation();

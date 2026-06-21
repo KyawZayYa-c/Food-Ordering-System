@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useGetProfileQuery } from '../../lib/features/auth/authApiSlice';
+import { useGetProfileQuery } from '../lib/features/auth/authApiSlice';
 
 const ProtectedRoute = ({ allowedRole }) => {
   const { data: response, isLoading, isError } = useGetProfileQuery();

@@ -7,6 +7,11 @@ const orderSchema = joi.object({
             quantity: joi.number().min(1).required()
         })
     ).required(),
+    shippingAddress: joi.object({
+    address: joi.string().required(),
+    city: joi.string().required(),
+    phone: joi.string().required()
+    }).required(),
     total_amount: joi.number().required()
 });
 

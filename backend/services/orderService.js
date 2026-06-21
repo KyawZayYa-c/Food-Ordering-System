@@ -9,13 +9,14 @@ const createOrder = async (orderData)=>{
 }
 
 const getAllOrders = async () => {
-    const orders = await Order.find().populate('customer', 'name email phone');
+    const orders = await Order.find().populate('customer', 'name email phone').populate('items.product', 'name price')
+        .sort({ createdAt: -1 });;
     return orders;
 }
 
 const getOrderById = async (orderId) => {
-    const order = await Order.findById(orderId).populate('customer, name email phone');
-    return orders;
+   const order = await Order.findById(orderId).populate('customer', 'name email phone');
+    return order;
 }
 /**
 // orderService.js 
@@ -34,7 +35,9 @@ const getOrderById = async (orderId) => {
 
 
 const getOrderByUserId = async (userId) => {
-    const orders = await Order.find({ customer: userId }).sort({ createdAt: -1 });
+    const orders = await Order.find({ customer: userId })
+        .populate('items.product', 'name price image_url')
+        .sort({ createdAt: -1 });
     return orders;
 };
 
@@ -44,22 +47,38 @@ const updateOrderStatus = async (orderId, status) => {
         { status },
         { new: true }
     );
-    if (!updateOrder) throw new Error("Failed to update status, order not found!");
+    if (!updatedOrder) throw new Error("Failed to update status, order not found!");
     return updatedOrder;
 };
 
 const getPaymentHash = (order_id, amount) => {
     const merchant_id = process.env.PAYHERE_MERCHANT_ID;
     const merchant_secret = process.env.PAYHERE_MERCHANT_SECRET;
+    console.log('merchant secret ', merchant_secret)
     const currency = 'LKR';
     
     // Hash calculate
     let hashedSecret = crypto.createHash('md5').update(merchant_secret).digest('hex').toUpperCase();
-    let hash = crypto.createHash('md5').update(merchant_id + order_id + parseFloat(amount).toFixed(2) + currency + hashedSecret).digest('hex').toUpperCase();
+
+    const stringToHash = merchant_id + order_id.toString() + parseFloat(amount).toFixed(2) + currency + hashedSecret;
+
+    let hash = crypto.createHash('md5')
+    .update(stringToHash)
+    .digest('hex')
+        .toUpperCase();
+    
+    console.log('hash : ', hash);
     
     return hash;
 };
 
+const updatePaymentStatus = async (orderId, status, paymentId) => {
+    return await Order.findByIdAndUpdate(
+        orderId,
+        { payment_status: status, payment_id: paymentId },
+        { new: true }
+    );
+};
 module.exports = {
     createOrder, 
     getAllOrders,
@@ -67,4 +86,5 @@ module.exports = {
     getOrderByUserId,
     updateOrderStatus,
     getPaymentHash,
+    updatePaymentStatus,
 }

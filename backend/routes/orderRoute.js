@@ -1,15 +1,17 @@
 const express = require('express');
 const orderController = require('../controllers/orderController.js');
-const { protect } = require('../utils/middleware/authMiddleware.js');
+const { protect, admin } = require('../utils/middleware/authMiddleware.js');
 const { validate } = require('../utils/middleware/validator.js'); 
 const { orderSchema } = require('../utils/schemas/orderSchema.js');
 const routes = express.Router();
 
-routes.post('/', protect, validate(orderSchema), orderController.getAllOrders);
-routes.get('/:id', orderController.getOrder);
-routes.get('/my-order', orderController.getMyOrders);
-routes.patch('/:id/status', orderController.updateStatus);
-routes.post('/generate-hash', orderController.generateHash);
+routes.post('/', protect, validate(orderSchema), orderController.placeOrder);
+routes.get('/all', protect, admin, orderController.getAllOrders);
+routes.get('/:id', protect, orderController.getOrder);
+routes.get('/my-order', protect, orderController.getMyOrders);
+routes.patch('/:id/status', protect, orderController.updateStatus);
+routes.post('/generate-hash', protect, orderController.generateHash);
+routes.post('/notify', orderController.handlePayHereNotify);
 
 module.exports = routes;
 

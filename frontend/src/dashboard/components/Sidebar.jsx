@@ -19,7 +19,7 @@ import {
 } from '@tabler/icons-react';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useGetProfileQuery, useLogoutMutation } from '../../../lib/features/auth/authApiSlice';
+import { useGetProfileQuery, useLogoutMutation } from '../../lib/features/auth/authApiSlice';
 export default function Sidebar() {
     
   const location = useLocation();

@@ -1,16 +1,24 @@
 import { Card, Image , Text, Button, Group, Badge, Stack } from '@mantine/core'; 
 import { IconTrash, IconEdit } from '@tabler/icons-react';
-import { ImageURL } from '../../../../lib/api/BaseURL';
-import { useDeleteProductMutation } from '../../../../lib/features/product/productApiSlice';
-import { openConfirmModal } from '../../../../lib/modals/confirmModal';
-import { useGetProfileQuery } from '../../../../lib/features/auth/authApiSlice';
+import { ImageURL } from '../../../lib/api/BaseURL';
+import { useDeleteProductMutation } from '../../../lib/features/product/productApiSlice';
+import { openConfirmModal } from '../../../lib/modals/confirmModal';
+import { useGetProfileQuery } from '../../../lib/features/auth/authApiSlice';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../../lib/features/order/cart/cartSlice';
 
 const ProductUiCard = ({ product, onEdit }) => {
   const { data: user } = useGetProfileQuery();
   const [deleteProduct] = useDeleteProductMutation();
+  const dispatch = useDispatch();
 
   const handleConfirmDelete = async () => {
     deleteProduct(product._id);
+  };
+
+  const handleAddToCart = () => {
+    console.log("Adding to cart:", product , product._id);
+    dispatch(addToCart(product));
   };
 
 
@@ -78,7 +86,11 @@ const ProductUiCard = ({ product, onEdit }) => {
                 </Button>
               </Group>
             </>
-          ) : <Button color="blue" fullWidth radius="md"> Add to Order</Button>
+          ) : <Button
+              onClick={handleAddToCart}
+              color="blue"
+              fullWidth
+              radius="md"> Add to Order</Button>
         }
       </Stack>
     </Card>

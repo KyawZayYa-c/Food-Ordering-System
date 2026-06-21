@@ -27,17 +27,21 @@ import {
   IconChefHat,
 } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useGetProfileQuery, useLogoutMutation } from '../../../lib/features/auth/authApiSlice';
+import { useGetProfileQuery, useLogoutMutation } from '../../lib/features/auth/authApiSlice';
+import { useSelector } from 'react-redux';
+import CartDrawer from '../order/components/CartDrawer';
 
 export default function CustomerHeader() {
   const theme = useMantineTheme();
   const navigate = useNavigate();
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const cartItems = useSelector((state) => state.cart.items);
+  const cartCount = cartItems.length;
   const { data: user } = useGetProfileQuery();
   const [logout] = useLogoutMutation();
   const [searchValue, setSearchValue] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
   
-  const cartCount = 0;
 
   const handleLogout = async () => {
     try {
@@ -131,12 +135,13 @@ export default function CustomerHeader() {
           </Menu>
 
           {/* Cart */}
+           <CartDrawer opened={isCartOpen} onClose={() => setIsCartOpen(false)} />
           <Tooltip label="Cart">
             <ActionIcon
               variant="subtle"
               color="gray"
               size="lg"
-              onClick={() => navigate('/customer/cart')}
+              onClick={() => setIsCartOpen(true)}
               styles={{
                 root: {
                   '&:hover': {

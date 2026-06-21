@@ -3,10 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextInput, NumberInput, Select, Textarea, Button, Image, Stack, Paper, Title, SimpleGrid, Group, Text, ActionIcon } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone'; 
 import { IconPhoto , IconX} from '@tabler/icons-react';
-import { productSchema, CATEGORY_OPTIONS } from "../../../../lib/schemas/productSchema"; 
+import { productSchema, CATEGORY_OPTIONS } from "../../../lib/schemas/productSchema"; 
 import { useState } from "react";
-import { useAddProductMutation, useUpdateProductMutation } from "../../../../lib/features/product/productApiSlice";
-import { ImageURL } from "../../../../lib/api/BaseURL";
+import { useAddProductMutation, useUpdateProductMutation } from "../../../lib/features/product/productApiSlice";
+import { ImageURL } from "../../../lib/api/BaseURL";
 
 const AddProductForm = ({ onClose, editData }) => {
   const [file, setFile] = useState(null);
