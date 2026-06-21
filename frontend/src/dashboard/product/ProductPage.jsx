@@ -13,11 +13,16 @@ export default function ProductPage() {
         open();
     }
 
+    const handleAddNew = () => {
+        setEditData(null); 
+        open();
+    }
+
     return (
       <Box> 
           <Group justify='space-between' mb='md'>
               <Title order={2} >Menu Items</Title>
-              <Button onClick={open}> + Add New Product</Button>
+              <Button key={editData ? editData._id : 'new-product'} onClick={handleAddNew}> + Add New Product</Button>
           </Group>
           <ProductList onEdit={handleEditClicked} />
           <Modal
@@ -29,7 +34,7 @@ export default function ProductPage() {
               size='lg'
           >
                 <AddProductForm
-                    key={editData ? editData.id : "new"}
+                    key={editData ? editData._id : "new"}
                     onClose={close}
                     editData={editData} />
           </Modal>

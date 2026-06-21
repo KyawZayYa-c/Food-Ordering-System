@@ -8,7 +8,7 @@ import Dashboard from './dashboard/Dashboard';
 import LoginForm from './auth/LoginForm';
 import RegisterForm from './auth/RegisterForm';
 import ProtectedRoute from './auth/ProtectedRoute';
-import ClientPage from './client/ClientPage';
+import ClientPage from './client/Client';
 function App() {
   return (
     <MantineProvider> 

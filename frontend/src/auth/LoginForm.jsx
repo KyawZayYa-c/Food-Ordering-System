@@ -19,7 +19,7 @@ const LoginForm = () => {
       const response = await login(data).unwrap();
 
       if (response.role === 'admin') {
-        navigate('/dashboard');
+        navigate('/dashboard/overviews');
       } else {
         navigate('/');
       }

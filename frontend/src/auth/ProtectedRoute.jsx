@@ -10,7 +10,7 @@ const ProtectedRoute = ({ allowedRole }) => {
   }
   
   const userRole = response.data?.role; 
-console.log('user role : ', userRole);
+  
   if (allowedRole && userRole !== allowedRole) {
       return userRole === 'admin' ? <Navigate to="/dashboard/overviews" replace /> : <Navigate to="/" replace />;
   }

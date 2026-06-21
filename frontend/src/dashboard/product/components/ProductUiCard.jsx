@@ -3,8 +3,10 @@ import { IconTrash, IconEdit } from '@tabler/icons-react';
 import { ImageURL } from '../../../../lib/api/BaseURL';
 import { useDeleteProductMutation } from '../../../../lib/features/product/productApiSlice';
 import { openConfirmModal } from '../../../../lib/modals/confirmModal';
+import { useGetProfileQuery } from '../../../../lib/features/auth/authApiSlice';
 
 const ProductUiCard = ({ product, onEdit }) => {
+  const { data: user } = useGetProfileQuery();
   const [deleteProduct] = useDeleteProductMutation();
 
   const handleConfirmDelete = async () => {
@@ -16,7 +18,7 @@ const ProductUiCard = ({ product, onEdit }) => {
     ? `${ImageURL}${product.image_url}` 
     : 'https://placehold.co/400x400?text=No+Image';
   
-  const user = "admin";
+  const role = user?.data?.role;
 
   return (
     <Card shadow="sm" padding="sm" radius="md" withBorder>
@@ -50,7 +52,7 @@ const ProductUiCard = ({ product, onEdit }) => {
           ${product.price.toFixed(2)}
         </Text>
         {
-          user == 'admin' ? (
+          role == 'admin' ? (
             <>
               <Group gap="xs" grow style={{ width: '100%' }}>
                 <Button 

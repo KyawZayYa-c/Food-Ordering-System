@@ -5,9 +5,9 @@ import { useGetProductsQuery } from "../../../../lib/features/product/productApi
 import ProductLoading from "../../../components/ProductLoading";
 import ErrorDisplay from "../../../components/ErrorDisplay";
 const ProductList = ({ onEdit }) => {
-
+ 
   const { data: rawData, isLoading, error, refetch } = useGetProductsQuery();
-
+  
   if (isLoading) return <ProductLoading />;
   if (error) {
   return (

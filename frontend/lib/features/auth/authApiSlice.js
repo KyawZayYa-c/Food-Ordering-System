@@ -4,16 +4,10 @@ import { BaseURL } from '../../api/BaseURL';
 
 export const authApiSlice = createApi({
   reducerPath: 'authApi',
+  tagTypes: ['User'],
   baseQuery: fetchBaseQuery({ 
       baseUrl: BaseURL,
       credentials: 'include',
-    prepareHeaders: (headers) => {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (user && user.token) {
-        headers.set('Authorization', `Bearer ${user.token}`);
-      }
-      return headers;
-    },
   }),
   endpoints: (builder) => ({
     register: builder.mutation({
@@ -22,6 +16,7 @@ export const authApiSlice = createApi({
         method: 'POST',
         body: userData,
       }),
+      invalidatesTags: ['User'],
     }),
     login: builder.mutation({
       query: (credentials) => ({
@@ -29,16 +24,18 @@ export const authApiSlice = createApi({
         method: 'POST',
         body: credentials,
         }),
-        
+        invalidatesTags: ['User'],
     }),
     logout: builder.mutation({
         query: () => ({
             url: '/users/logout',
             method: 'POST',
-        }),
+      }),
+      invalidatesTags: ['User'],
     }),
     getProfile: builder.query({
       query: () => '/users/profile',
+      providesTags: ['User'],
     }),
   }),
 });

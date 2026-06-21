@@ -1,0 +1,1 @@
+{"message":"Invalid credentials","stack":"Error: Invalid credentials\n    at Object.loginUser (D:\\Kyaw Zay Ya Written Project\\Internship Assignment\\backend\\services\\userService.js:16:25)\n    at async login (D:\\Kyaw Zay Ya Written Project\\Internship Assignment\\backend\\controllers\\userController.js:28:22)","time":"2026-06-21T05:42:02.083Z"}

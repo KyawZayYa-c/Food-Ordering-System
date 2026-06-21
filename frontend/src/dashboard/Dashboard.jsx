@@ -68,9 +68,12 @@ export default function Dashboard() {
             <ActionIcon variant="subtle" color="gray">
               <IconBell size={20} />
             </ActionIcon>
-            <Button variant="light" leftSection={<IconUserPlus size={16} />} size="xs">
+            <Button variant="light" leftSection={<IconUserPlus size={16} />} size="xs" visibleFrom='sm' >
               Add Staff
             </Button>
+            <ActionIcon variant="light" size="sm" hiddenFrom="sm">
+              <IconUserPlus size={16} />
+            </ActionIcon>
           </Group>
         </Group>
       </AppShell.Header>
