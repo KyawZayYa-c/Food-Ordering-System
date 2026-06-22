@@ -42,8 +42,23 @@ export const orderApiSlice = createApi({
       url: '/orders/generate-hash',
       method: 'POST',
       body: hashData, // { order_id: '...', amount: ... }
+      }),
     }),
-  }),
+    genHash: builder.mutation({
+      query: (hashData) => ({
+        url: '/orders/start',
+        method: 'POST',
+        body: hashData, 
+      }),
+    }),
+
+    handleNotify: builder.mutation({
+      query: (notifyData) => ({
+        url: '/orders/notify',
+        method: 'POST',
+        body: notifyData,
+      }),
+    }),
   }),
 });
 
@@ -53,4 +68,6 @@ export const {
   useGetMyOrdersQuery,
   useUpdateOrderStatusMutation,
   useGenerateHashMutation,
+  useGenHashMutation,
+  useHandleNotifyMutation,
 } = orderApiSlice;

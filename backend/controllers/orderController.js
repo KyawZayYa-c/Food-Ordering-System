@@ -62,7 +62,8 @@ const generateHash = async (req, res, next) => {
     try {
         const { order_id, amount } = req.body;
         const hash = orderService.getPaymentHash(order_id, amount);
-        Msg(res, 'Hash generated', { hash });
+        const merchant_id = process.env.PAYHERE_MERCHANT_ID;
+        Msg(res, 'Hash generated', { hash, merchant_id });
     } catch (error) {
         next(error);
     }

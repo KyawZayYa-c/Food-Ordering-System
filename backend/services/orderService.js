@@ -9,7 +9,7 @@ const createOrder = async (orderData)=>{
 }
 
 const getAllOrders = async () => {
-    const orders = await Order.find().populate('customer', 'name email phone').populate('items.product', 'name price')
+    const orders = await Order.find().populate('customer', 'name email phone').populate('items.product', 'name price image_url')
         .sort({ createdAt: -1 });;
     return orders;
 }
@@ -51,23 +51,24 @@ const updateOrderStatus = async (orderId, status) => {
     return updatedOrder;
 };
 
+
 const getPaymentHash = (order_id, amount) => {
-    const merchant_id = process.env.PAYHERE_MERCHANT_ID;
-    const merchant_secret = process.env.PAYHERE_MERCHANT_SECRET;
+    const merchant_id = "1236454";
+    const merchant_secret = "OTcxMTY5MzQ2MzY0NjM4NjM4MDM3OTIxNzM0MjcyNDMyODExMDE0";
     console.log('merchant secret ', merchant_secret)
     const currency = 'LKR';
-    
+    const safeOrderId = order_id ? order_id.toString() : "";
     // Hash calculate
     let hashedSecret = crypto.createHash('md5').update(merchant_secret).digest('hex').toUpperCase();
 
-    const stringToHash = merchant_id + order_id.toString() + parseFloat(amount).toFixed(2) + currency + hashedSecret;
+    const stringToHash = merchant_id + safeOrderId + parseFloat(amount).toFixed(2) + currency + hashedSecret;
 
     let hash = crypto.createHash('md5')
     .update(stringToHash)
     .digest('hex')
         .toUpperCase();
     
-    console.log('hash : ', hash);
+    console.log('hash BACKEND services : ', hash);
     
     return hash;
 };
