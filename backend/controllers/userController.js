@@ -60,10 +60,76 @@ const getProfile = async (req, res, next) => {
         next(error);
     }
 }
+const getAllUsers = async (req, res, next) => {
+    try {
+        const users = await userService.getAllUsers();
+        Msg(res, 'All customers fetched successfully', users);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getUserDetails = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const user = await userService.getUserWithOrders(id);
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+        
+        Msg(res, 'User details fetched successfully', user);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+const deleteUser = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        
+        if (id === req.user.id) {
+            return res.status(400).json({
+                success: false,
+                message: 'Cannot delete your own account'
+            });
+        }
+        
+        const user = await userService.deleteUser(id);
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+        
+        Msg(res, 'User deleted successfully', null);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getUserStats = async (req, res, next) => {
+    try {
+        const stats = await userService.getUserStats();
+        Msg(res, 'User stats fetched successfully', stats);
+    } catch (error) {
+        next(error);
+    }
+};
 
 module.exports = {
     register, 
     login,
     logout,
     getProfile,
-}
+    getAllUsers,
+    getUserDetails,
+    deleteUser,
+    getUserStats,
+};

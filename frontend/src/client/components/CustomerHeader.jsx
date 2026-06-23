@@ -16,14 +16,10 @@ import {
 } from '@mantine/core';
 import {
   IconSearch,
-  IconBell,
   IconShoppingCart,
   IconUser,
-  IconHeart,
   IconHistory,
   IconLogout,
-  IconSettings,
-  IconHelpCircle,
   IconChefHat,
 } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -113,27 +109,6 @@ export default function CustomerHeader() {
             )}
           </Box>
 
-          {/* Notifications */}
-          <Menu shadow="md" width={300} position="bottom-end">
-            <Menu.Target>
-              <ActionIcon variant="subtle" color="gray" size="lg">
-                <Indicator inline label="3" size={16} color="red">
-                  <IconBell size={20} />
-                </Indicator>
-              </ActionIcon>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Label>Notifications</Menu.Label>
-              <Menu.Item>New order update</Menu.Item>
-              <Menu.Item>Special offer available</Menu.Item>
-              <Menu.Item>Your order is delivered</Menu.Item>
-              <Menu.Divider />
-              <Menu.Item component={Link} to="/customer/notifications" fw={500}>
-                View all notifications
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-
           {/* Cart */}
            <CartDrawer opened={isCartOpen} onClose={() => setIsCartOpen(false)} />
           <Tooltip label="Cart">
@@ -185,13 +160,8 @@ export default function CustomerHeader() {
               <Menu.Item leftSection={<IconHistory size={16} />} component={Link} to="/customer/orders">
                 My Orders
               </Menu.Item>
-              <Menu.Item leftSection={<IconHeart size={16} />} component={Link} to="/customer/favorites">
-                Favorites
-              </Menu.Item>
               <Menu.Divider />
-              <Menu.Item leftSection={<IconSettings size={16} />}>Settings</Menu.Item>
-              <Menu.Item leftSection={<IconHelpCircle size={16} />}>Help & Support</Menu.Item>
-              <Menu.Divider />
+          
               <Menu.Item
                 leftSection={<IconLogout size={16} />}
                 color="red"

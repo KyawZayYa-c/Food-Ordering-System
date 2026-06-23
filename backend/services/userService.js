@@ -22,8 +22,48 @@ const getUserById = async (id) => {
     return await User.findById(id).select('-password'); 
 };
 
+const getAllUsers = async () => {
+    return await User.find({ role: 'customer' })
+        .select('-password')
+        .sort({ createdAt: -1 });
+};
+
+const getUserWithOrders = async (id) => {
+    return await User.findById(id)
+        .select('-password')
+        .populate({
+            path: 'orders',
+            populate: {
+                path: 'items.product',
+                select: 'name price image_url'
+            }
+        });
+};
+
+const updateUserStatus = async (id, status) => {
+    return await User.findByIdAndUpdate(
+        id,
+        { status },
+        { new: true }
+    ).select('-password');
+};
+
+const deleteUser = async (id) => {
+    return await User.findByIdAndDelete(id);
+};
+
+
+const getUserByEmail = async (email) => {
+    return await User.findOne({ email }).select('-password');
+};
+
 module.exports = {
     registerUser,
     loginUser,
-    getUserById
+    getUserById,
+    getAllUsers,
+    getUserWithOrders,
+    updateUserStatus,
+    deleteUser,
+    getUserByEmail,
 };
