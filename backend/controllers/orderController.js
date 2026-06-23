@@ -33,6 +33,7 @@ const getAllOrders = async (req, res, next) => {
 const getOrder = async (req, res, next) => {
     try {
         const order = await orderService.getOrderById(req.params.id);
+        console.log('get order : ', order)
         Msg(res, 'Order details fetched', order);
     } catch (error) {
         next(error);
@@ -58,32 +59,29 @@ const updateStatus = async (req, res, next) => {
     }
 };
 
-const generateHash = async (req, res, next) => {
+const updatePaymentStatus = async (req, res, next) => {
     try {
-        const { order_id, amount } = req.body;
-        const hash = orderService.getPaymentHash(order_id, amount);
-        const merchant_id = process.env.PAYHERE_MERCHANT_ID;
-        Msg(res, 'Hash generated', { hash, merchant_id });
+        const { payment_status, payment_id } = req.body;
+        
+        if (!payment_id) {
+            return res.status(400).json({
+                success: false,
+                message: 'Payment ID is required'
+            });
+        }
+        
+        const updatedOrder = await orderService.updatePaymentStatus(
+            req.params.id, 
+            payment_status, 
+            payment_id
+        );
+        Msg(res, 'Payment status updated', updatedOrder);
     } catch (error) {
+        console.log('updatePaymentStatus error ', error);
         next(error);
     }
 };
 
-const handlePayHereNotify = async (req, res, next) => {
-    try {
-        const { order_id, status_code, payment_id } = req.body;
-        
-        // Status code 2 Payment Success 
-        if (status_code === '2') {
-            await orderService.updatePaymentStatus(order_id, 'Paid', payment_id);
-            res.status(200).send('Notification received');
-        } else {
-            res.status(400).send('Payment failed or pending');
-        }
-    } catch (error) {
-        next(error);
-    }
-};
 
 module.exports = {
     placeOrder,
@@ -91,6 +89,5 @@ module.exports = {
     getOrder,
     getMyOrders,
     updateStatus,
-    generateHash,
-    handlePayHereNotify,
+    updatePaymentStatus
 };

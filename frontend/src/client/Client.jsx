@@ -1,11 +1,12 @@
 
 import { AppShell, Container } from '@mantine/core';
 
-import { Outlet, Route, Routes } from 'react-router-dom';
+import {  Route, Routes } from 'react-router-dom';
 import CustomerHeader from './components/CustomerHeader';
 import CustomerHome from './home/HomePage';
-import PaymentButton from './order/PaymentButton';
 import CustomerMyOrders from './myorders/CustomerMyOrders';
+import PaymentSuccess from './order/components/PaymentSuccess';
+import PaymentCancel from './order/components/PaymentCancel';
 
 export default function ClientPage() {
 
@@ -16,8 +17,8 @@ export default function ClientPage() {
               <Container fluid p="sm">
                     <Routes>
                       <Route path="/" element={<CustomerHome />} />
-                      {/* <Route path="/customers" element={<CustomerPage />} />
-                      <Route path="/products" element={<ProductPage />} /> */}
+                      <Route path="/payment/success" element={<PaymentSuccess />} />
+                      <Route path="/payment/cancel" element={<PaymentCancel />} />
                       <Route path="customer/orders" element={<CustomerMyOrders />} />
                     </Routes>
               </Container>

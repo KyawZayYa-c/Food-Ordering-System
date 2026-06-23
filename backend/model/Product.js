@@ -9,3 +9,13 @@ const productSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);
+
+
+productSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
+    const productId = this._id;
+    await mongoose.model('Order').updateMany(
+        { "items.product": productId },
+        { $pull: { items: { product: productId } } }
+    );
+    next();
+});

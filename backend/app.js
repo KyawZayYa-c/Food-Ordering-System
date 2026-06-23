@@ -4,6 +4,7 @@ const errorFile = require('./utils/errorHelper');
 const productRoute = require('./routes/productRoute');
 const orderRoute = require('./routes/orderRoute');
 const userRoute = require('./routes/userRoute');
+const paymentRoute = require('./routes/payment');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -30,7 +31,7 @@ connectDB();
 app.get('/', (req, res) => {
   res.send('Food ordering stystem! Server is running.');
 });
-
+app.use("/api/payment", paymentRoute);
 app.use('/api/products', productRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/users', userRoute)

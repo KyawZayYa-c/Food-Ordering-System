@@ -3,7 +3,7 @@ import { BaseURL } from '../../api/BaseURL';
 
 export const productApiSlice = createApi({
     reducerPath: 'productApi', 
-    baseQuery: fetchBaseQuery({ baseUrl: BaseURL }),
+    baseQuery: fetchBaseQuery({ baseUrl: BaseURL, credentials: 'include', }),
     tagTypes: ['Products'],
     endpoints: (builder) => ({
       getProducts: builder.query({
