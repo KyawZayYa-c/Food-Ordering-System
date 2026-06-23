@@ -141,7 +141,7 @@ export default function CustomerHeader() {
               variant="subtle"
               color="gray"
               size="lg"
-              onClick={() => setIsCartOpen(true)}
+              onClick={() => setIsCartOpen(!isCartOpen)}
               styles={{
                 root: {
                   '&:hover': {

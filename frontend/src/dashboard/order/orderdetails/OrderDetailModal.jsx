@@ -1,4 +1,3 @@
-
 import {
   Group,
   Text,
@@ -16,9 +15,11 @@ import CustomerInfo from './components/CustomerInfo';
 import ShippingAddress from './components/shippingAddress';
 import OrderItems from './components/OrderItems';
 import OrderStatusActions from './components/OrderStatusActions';
+import { useSelector } from 'react-redux';
 
 export default function OrderDetailModal({ opened, onClose, order }) {
-  if (!order) return null;
+  const { user } = useSelector((state) => state.auth || { user: null });
+  const isAdmin = user?.role === 'admin';
 
   const [updateOrderStatus, { isLoading }] = useUpdateOrderStatusMutation();
 
@@ -50,6 +51,8 @@ export default function OrderDetailModal({ opened, onClose, order }) {
     });
   };
 
+  if (!order) return null;
+
   return (
     <Modal
       opened={opened}
@@ -65,33 +68,43 @@ export default function OrderDetailModal({ opened, onClose, order }) {
         </Group>
       }
       scrollAreaComponent={ScrollArea.Autosize}
+      styles={{
+        body: {
+          padding: '16px',
+          maxHeight: '74vh',
+          overflowY: 'auto',
+        },
+        content: {
+          maxHeight: '100vh',
+        },
+        inner: {
+      display: 'flex',
+      alignItems: 'end',
+      justifyContent: 'center',
+    },
+      }}
     >
       <Stack gap="md">
-        {/* Order Status */}
+        
         <OrderStatus order={order} formatDate={formatDate} />
+        
         <Grid>
-          {/* Customer Info */}
 
           <CustomerInfo order={order} />
-          
 
           <ShippingAddress order={order} />
         </Grid>
 
-        {/* Order Items */}
         <OrderItems order={order} />
 
-        {/* Actions */}
-        {order.status !== 'Delivered' && order.status !== 'Cancelled' && (
-          <OrderStatusActions handleStatusUpdate={handleStatusUpdate} order={order}  isLoading={isLoading} />
+        {isAdmin && order.status !== 'Delivered' && order.status !== 'Cancelled' && (
+          <OrderStatusActions 
+            handleStatusUpdate={handleStatusUpdate} 
+            order={order}  
+            isLoading={isLoading} 
+          />
         )}
       </Stack>
     </Modal>
   );
 }
-
-
-
-
-
-

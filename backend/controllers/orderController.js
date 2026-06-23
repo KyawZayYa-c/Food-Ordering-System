@@ -41,7 +41,7 @@ const getOrder = async (req, res, next) => {
 
 const getMyOrders = async (req, res, next) => {
     try {
-        const orders = await orderService.getOrdersByUserId(req.user.id);
+        const orders = await orderService.getOrderByUserId(req.user.id);
         Msg(res, 'Your orders fetched', orders);
     } catch (error) {
         next(error);

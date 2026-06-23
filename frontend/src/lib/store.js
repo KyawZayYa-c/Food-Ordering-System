@@ -3,6 +3,7 @@ import { productApiSlice } from "./features/product/productApiSlice";
 import { authApiSlice } from "./features/auth/authApiSlice";
 import { orderApiSlice } from "./features/order/orderApiSlice";
 import cartReducer from "./features/order/cart/cartSlice";
+import authReducer from "./features/auth/authSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
     [orderApiSlice.reducerPath]: orderApiSlice.reducer,
 
     // Regular Reducers
-    cart: cartReducer , 
+    cart: cartReducer, 
+    auth: authReducer ,
   },
   
   middleware: (getDefaultMiddleware) =>

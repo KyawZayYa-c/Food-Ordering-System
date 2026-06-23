@@ -26,7 +26,7 @@ function App() {
 
                     {/* Customer Route */}
                     <Route element={<ProtectedRoute allowedRole="customer" />}>
-                      <Route path="/" element={<ClientPage />} />
+                      <Route path="/*" element={<ClientPage />} />
                     </Route>
                   </Routes>
               </BrowserRouter>
