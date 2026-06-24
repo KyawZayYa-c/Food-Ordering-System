@@ -24,8 +24,8 @@ export default function PaymentCancel() {
           Your payment was cancelled. You can try again or continue shopping.
         </Text>
         <Stack mt="xl">
-          <Button variant="filled" color="blue" leftSection={<IconShoppingCart size={16} />} onClick={() => navigate('/customer/cart')}>
-            Go to Cart
+          <Button variant="filled" color="blue" leftSection={<IconShoppingCart size={16} />} onClick={() => navigate('/customer/orders')}>
+            Go to Orders
           </Button>
           <Button variant="light" color="gray" onClick={() => navigate('/')}>
             Continue Shopping

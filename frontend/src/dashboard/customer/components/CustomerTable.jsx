@@ -9,9 +9,10 @@ import {
   ScrollArea,
   Box,
   Avatar,
+  ThemeIcon,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconEye, IconTrash } from '@tabler/icons-react';
+import { IconEye, IconTrash, IconStarFilled } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
 import { useDeleteUserMutation } from '../../../lib/features/user/userApiSlice';
 import { notifications } from '@mantine/notifications';
@@ -55,10 +56,15 @@ export default function CustomerTable({ customers, onViewCustomer }) {
     <Paper withBorder radius="md" shadow="sm" style={{ overflow: 'hidden' }}>
       <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-gray-2)' }}>
         <Group justify="space-between">
-          <Text fw={600} size="lg">Customers</Text>
-          <Badge size="lg" color="blue" variant="light">
-            {customers.length} customers
-          </Badge>
+          <Group gap="xs">
+            <Text fw={600} size="lg">Customers</Text>
+            <Badge size="lg" color="blue" variant="light">
+              {customers.length} customers
+            </Badge>
+          </Group>
+          <Text size="sm" c="dimmed">
+            🏆 Top customers by order count
+          </Text>
         </Group>
       </Box>
 
@@ -69,13 +75,15 @@ export default function CustomerTable({ customers, onViewCustomer }) {
             highlightOnHover
             verticalSpacing="sm"  
             horizontalSpacing="md" 
-            style={{ minWidth: isMobile ? 600 : 700 }}
+            style={{ minWidth: isMobile ? 700 : 800 }}
           >
             <thead>
               <tr>
+                <th style={{ padding: '12px 16px', width: 50 }}>#</th>
                 <th style={{ padding: '12px 16px' }}>Customer</th>
                 <th style={{ padding: '12px 16px' }}>Email</th>
                 <th style={{ padding: '12px 16px' }}>Phone</th>
+                <th style={{ padding: '12px 16px', textAlign: 'center' }}>Orders</th>
                 <th style={{ padding: '12px 16px', textAlign: 'center' }}>Status</th>
                 <th style={{ padding: '12px 16px', textAlign: 'center' }}>Role</th>
                 <th style={{ padding: '12px 16px', textAlign: 'center' }}>Actions</th>
@@ -84,77 +92,114 @@ export default function CustomerTable({ customers, onViewCustomer }) {
             <tbody>
               {customers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} style={{ textAlign: 'center', padding: '40px' }}>
+                  <td colSpan={8} style={{ textAlign: 'center', padding: '40px' }}>
                     <Text c="dimmed">No customers found</Text>
                   </td>
                 </tr>
               ) : (
-                customers.map((customer) => (
-                  <tr key={customer._id}>
-                    <td style={{ padding: '12px 16px' }}>
-                      <Group gap="xs" wrap="nowrap">
-                        <Avatar size="sm" radius="xl" color="blue">
-                          {customer.name?.substring(0, 2).toUpperCase() || '?'}
-                        </Avatar>
-                        <Text size="sm" fw={500}>
-                          {customer.name || 'N/A'}
+                customers.map((customer, index) => {
+                  const isTop3 = index < 3;
+                  const medalEmoji = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+                  
+                  return (
+                    <tr key={customer._id} style={{
+                      background: isTop3 ? 'var(--mantine-color-yellow-0)' : 'transparent',
+                    }}>
+                      <td style={{ padding: '12px 16px', textAlign: 'center' }}>
+                        {isTop3 ? (
+                          <ThemeIcon color="yellow" size="sm" variant="light">
+                            <IconStarFilled size={14} />
+                          </ThemeIcon>
+                        ) : (
+                          <Text size="sm" c="dimmed">{index + 1}</Text>
+                        )}
+                      </td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <Group gap="xs" wrap="nowrap">
+                          <Avatar size="sm" radius="xl" color="blue">
+                            {customer.name?.substring(0, 2).toUpperCase() || '?'}
+                          </Avatar>
+                          <Box>
+                            <Group gap="xs">
+                              <Text size="sm" fw={500}>
+                                {customer.name || 'N/A'}
+                              </Text>
+                              {isTop3 && (
+                                <Text size="xs" c="dimmed">⭐ {medalEmoji}</Text>
+                              )}
+                            </Group>
+                            {customer.orderCount > 0 && (
+                              <Text size="xs" c="dimmed">
+                                ${customer.totalSpent?.toFixed(2)} spent
+                              </Text>
+                            )}
+                          </Box>
+                        </Group>
+                      </td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <Text size="sm" c="dimmed">
+                          {customer.email || 'N/A'}
                         </Text>
-                      </Group>
-                    </td>
-                    <td style={{ padding: '12px 16px' }}>
-                      <Text size="sm" c="dimmed">
-                        {customer.email || 'N/A'}
-                      </Text>
-                    </td>
-                    <td style={{ padding: '12px 16px' }}>
-                      <Text size="sm">
-                        {customer.phone || 'N/A'}
-                      </Text>
-                    </td>
-                    <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                      <Badge 
-                        color={customer.status === 'active' ? 'green' : 'red'}
-                        variant="filled"
-                        size="sm"
-                      >
-                        {customer.status || 'inactive'}
-                      </Badge>
-                    </td>
-                    <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                      <Badge 
-                        color={customer.role === 'admin' ? 'violet' : 'blue'}
-                        variant="light"
-                        size="sm"
-                      >
-                        {customer.role || 'customer'}
-                      </Badge>
-                    </td>
-                    <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                      <Group gap="xs" justify="center">
-                        <Tooltip label="View Details">
-                          <ActionIcon
-                            color="blue"
-                            variant="light"
-                            onClick={() => onViewCustomer(customer)}
-                            size={isMobile ? 'sm' : 'md'}
-                          >
-                            <IconEye size={isMobile ? 16 : 18} />
-                          </ActionIcon>
-                        </Tooltip>
-                        <Tooltip label="Delete">
-                          <ActionIcon
-                            color="red"
-                            variant="light"
-                            onClick={() => handleDelete(customer)}
-                            size={isMobile ? 'sm' : 'md'}
-                          >
-                            <IconTrash size={isMobile ? 16 : 18} />
-                          </ActionIcon>
-                        </Tooltip>
-                      </Group>
-                    </td>
-                  </tr>
-                ))
+                      </td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <Text size="sm">
+                          {customer.phone || 'N/A'}
+                        </Text>
+                      </td>
+                      <td style={{ padding: '12px 16px', textAlign: 'center' }}>
+                        <Badge 
+                          color={customer.orderCount > 0 ? 'blue' : 'gray'}
+                          variant="light"
+                          size="sm"
+                        >
+                          {customer.orderCount || 0}
+                        </Badge>
+                      </td>
+                      <td style={{ padding: '12px 16px', textAlign: 'center' }}>
+                        <Badge 
+                          color={customer.status === 'active' ? 'green' : 'red'}
+                          variant="filled"
+                          size="sm"
+                        >
+                          {customer.status || 'inactive'}
+                        </Badge>
+                      </td>
+                      <td style={{ padding: '12px 16px', textAlign: 'center' }}>
+                        <Badge 
+                          color={customer.role === 'admin' ? 'violet' : 'blue'}
+                          variant="light"
+                          size="sm"
+                        >
+                          {customer.role || 'customer'}
+                        </Badge>
+                      </td>
+                      <td style={{ padding: '12px 16px', textAlign: 'center' }}>
+                        <Group gap="xs" justify="center">
+                          <Tooltip label="View Details">
+                            <ActionIcon
+                              color="blue"
+                              variant="light"
+                              onClick={() => onViewCustomer(customer)}
+                              size={isMobile ? 'sm' : 'md'}
+                            >
+                              <IconEye size={isMobile ? 16 : 18} />
+                            </ActionIcon>
+                          </Tooltip>
+                          <Tooltip label="Delete">
+                            <ActionIcon
+                              color="red"
+                              variant="light"
+                              onClick={() => handleDelete(customer)}
+                              size={isMobile ? 'sm' : 'md'}
+                            >
+                              <IconTrash size={isMobile ? 16 : 18} />
+                            </ActionIcon>
+                          </Tooltip>
+                        </Group>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </Table>

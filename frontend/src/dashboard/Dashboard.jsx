@@ -7,13 +7,9 @@ import {
   Group,
   Code,
   Container,
-  Button,
-  ActionIcon,
   ThemeIcon,
 } from '@mantine/core';
 import {
-  IconUserPlus,
-  IconBell,
   IconChefHat,
 } from '@tabler/icons-react';
 import Sidebar from './components/Sidebar';
@@ -21,7 +17,6 @@ import { Routes, Route } from 'react-router-dom';
 import ProductPage from './product/ProductPage';
 import OrdersPage from './order/OrdersPage';
 import CustomerPage from './customer/CustomerPage';
-import Overview from './overview/Overview';
 
 export default function Dashboard() {
   const theme = useMantineTheme();
@@ -64,17 +59,6 @@ export default function Dashboard() {
               <Code>v1.0</Code>
             </Group>
           </Group>
-          <Group gap="sm">
-            <ActionIcon variant="subtle" color="gray">
-              <IconBell size={20} />
-            </ActionIcon>
-            <Button variant="light" leftSection={<IconUserPlus size={16} />} size="xs" visibleFrom='sm' >
-              Add Staff
-            </Button>
-            <ActionIcon variant="light" size="sm" hiddenFrom="sm">
-              <IconUserPlus size={16} />
-            </ActionIcon>
-          </Group>
         </Group>
       </AppShell.Header>
 
@@ -85,7 +69,6 @@ export default function Dashboard() {
       <AppShell.Main>
         <Container fluid p="sm">
               <Routes>
-                <Route path="/overviews" element={<Overview />} />
                 <Route path="/customers" element={<CustomerPage />} />
                 <Route path="/products" element={<ProductPage />} />
                 <Route path="/orders" element={<OrdersPage />} />

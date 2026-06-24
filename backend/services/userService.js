@@ -48,8 +48,12 @@ const updateUserStatus = async (id, status) => {
     ).select('-password');
 };
 
+
 const deleteUser = async (id) => {
-    return await User.findByIdAndDelete(id);
+    const user = await User.findById(id);
+    if (!user) throw new Error("User not found");
+    await user.deleteOne();
+    return user;
 };
 
 

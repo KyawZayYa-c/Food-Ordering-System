@@ -18,6 +18,12 @@ const register = async (req, res, next) => {
             role: user.role 
         }, 201);
     } catch (error) {
+        if (error.code === 11000) {
+            return res.status(400).json({
+                success: false,
+                message: 'This email is already registered. Please use a different email or login.'
+            });
+        }
         next(error);
     }
 }

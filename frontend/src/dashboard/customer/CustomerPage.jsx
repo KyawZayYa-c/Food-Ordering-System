@@ -18,12 +18,22 @@ export default function CustomerPage() {
   const customers = usersData?.data || [];
   const allOrders = ordersData?.data || [];
 
-  const handleViewCustomer = (customer) => {
-    const customerOrders = allOrders.filter(order => order.customer?._id === customer._id);
-    setSelectedCustomer({
+  const paidOrders = allOrders.filter(order => order.payment_status === 'Paid');
+
+  const customersWithOrderCount = customers.map(customer => {
+    const customerOrders = paidOrders.filter(order => order.customer?._id === customer._id);
+    return {
       ...customer,
-      orders: customerOrders  
-    });
+      orderCount: customerOrders.length,
+      totalSpent: customerOrders.reduce((sum, order) => sum + (order.total_amount || 0), 0),
+      orders: customerOrders
+    };
+  });
+
+  const sortedCustomers = [...customersWithOrderCount].sort((a, b) => b.orderCount - a.orderCount);
+
+  const handleViewCustomer = (customer) => {
+    setSelectedCustomer(customer);
     setModalOpened(true);
   };
 
@@ -46,7 +56,7 @@ export default function CustomerPage() {
     <Container size="xl" py="md">
       <CustomerStats customers={customers} />
       <CustomerTable 
-        customers={customers} 
+        customers={sortedCustomers} 
         onViewCustomer={handleViewCustomer}
       />
       

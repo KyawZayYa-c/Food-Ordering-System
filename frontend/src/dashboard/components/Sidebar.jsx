@@ -13,7 +13,6 @@ import {
 import {
   IconShoppingCart,
   IconUsers,
-  IconChartBar,
   IconLogout,
   IconCategory,
 } from '@tabler/icons-react';
@@ -44,16 +43,6 @@ export default function Sidebar() {
                     <Text size="xs" fw={700} c="dimmed" mb="xs">
                       MAIN MENU
                     </Text>
-                    <Button
-                    component={Link}
-                    to = "/dashboard/overviews"  
-                     variant={isSelected('/dashboard/overviews') ? 'filled' : 'subtle'}
-                      leftSection={<IconChartBar size={18} />}
-                      fullWidth
-                      justify="start"
-                    >
-                      Overview
-                    </Button>
                     <Button
                     component={Link}
                     to = "/dashboard/products"  

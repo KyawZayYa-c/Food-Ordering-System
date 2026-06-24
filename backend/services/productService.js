@@ -34,9 +34,8 @@ const deleteProduct = async (id) => {
     if (product.image_url) {
         deleteFile(product.image_url);
     }
-    const deleted = await Product.findByIdAndDelete(id);
-    if (!deleted) throw new Error("Product not found to delete");
-    return deleted;
+    await product.deleteOne();
+    return product;
 };
 
 module.exports = {

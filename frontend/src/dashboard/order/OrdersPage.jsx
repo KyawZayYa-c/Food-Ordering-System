@@ -9,9 +9,11 @@ import ErrorDisplay from '../../components/ErrorDisplay';
 import OrderLoading from '../../components/OrderLoading';
 
 
-// Main Order Page
 export default function OrderPage() {
-  const { data, isLoading, isError, refetch  } = useGetAllOrdersQuery();
+  const { data, isLoading, isError, refetch } = useGetAllOrdersQuery(undefined, {
+    refetchOnFocus: true, //  Tab open refresh 
+    refetchOnReconnect: true, // Internet connect  refresh 
+  });
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [modalOpened, setModalOpened] = useState(false);
 
@@ -21,6 +23,13 @@ export default function OrderPage() {
     setSelectedOrder(order);
     setModalOpened(true);
   };
+
+  const handleModalClose = () => {
+    setModalOpened(false);
+    setSelectedOrder(null);
+    refetch(); 
+  };
+
 
   if (isLoading) {
       return (
@@ -47,11 +56,9 @@ export default function OrderPage() {
 
       <OrderDetailModal
         opened={modalOpened}
-        onClose={() => {
-          setModalOpened(false);
-          setSelectedOrder(null);
-        }}
+        onClose={handleModalClose}
         order={selectedOrder}
+        refetchOrders={refetch}
       />
     </Container>
   );

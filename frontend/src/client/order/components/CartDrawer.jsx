@@ -7,12 +7,14 @@ import { IconMinus, IconPlus, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
 import ShippingForm from './ShippingForm';
 import PaymentButton from '../PaymentButton';
+import { useMediaQuery } from '@mantine/hooks';
 
 export default function CartDrawer({ opened, onClose }) {
   const cartItems = useSelector((state) => state.cart.items);
   const { user } = useSelector((state) => state.auth || { user: null });
   const [createOrder, { isLoading }] = useCreateOrderMutation();
   const dispatch = useDispatch();
+   const isMobile = useMediaQuery('(max-width: 768px)');
   const [shippingInfo, setShippingInfo] = useState({
     address: '',
     city: '',
@@ -70,8 +72,30 @@ export default function CartDrawer({ opened, onClose }) {
     console.error('Payment failed:', error);
   };
 
+ const backToHome = () => {
+  cartItems.forEach((item) => {
+    dispatch(removeFromCart(item._id));
+  });
+  
+  setShippingInfo({
+    address: '',
+    city: '',
+    phone: user?.phone || '',
+  });
+  
+  setOrderId(null);
+  setShowPayment(false);
+  
+  onClose();
+};
   return (
-    <Drawer opened={opened} onClose={onClose} title="Your Order" position="right" size={'sm'}>
+    <Drawer
+      opened={opened}
+      onClose={onClose}
+      title="Your Order"
+      position="right"
+      size={isMobile ? 'xs' : 'sm'}
+    >
       <Stack gap="md" p={'md'}>
         {cartItems.length === 0 ? (
           <Text ta="center" c="dimmed" py="xl">
@@ -165,9 +189,9 @@ export default function CartDrawer({ opened, onClose }) {
                   variant="subtle"
                   color="gray"
                   size="sm"
-                  onClick={() => setShowPayment(false)}
+                  onClick={backToHome}
                 >
-                  ← Back to Cart
+                  ← Back to Home
                 </Button>
               </>
             )}

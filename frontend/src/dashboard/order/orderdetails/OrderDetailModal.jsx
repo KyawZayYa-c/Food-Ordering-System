@@ -16,10 +16,13 @@ import ShippingAddress from './components/shippingAddress';
 import OrderItems from './components/OrderItems';
 import OrderStatusActions from './components/OrderStatusActions';
 import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import PaymentPayHere from './components/PaymentPayHere';
 
-export default function OrderDetailModal({ opened, onClose, order }) {
+export default function OrderDetailModal({ opened, onClose, order, refetchOrders }) { 
   const { user } = useSelector((state) => state.auth || { user: null });
   const isAdmin = user?.role === 'admin';
+  const [showPayment, setShowPayment] = useState(false);
 
   const [updateOrderStatus, { isLoading }] = useUpdateOrderStatusMutation();
 
@@ -31,6 +34,7 @@ export default function OrderDetailModal({ opened, onClose, order }) {
         message: `Order status updated to ${newStatus}`,
         color: 'green',
       });
+      if (refetchOrders) refetchOrders(); // ✅ Refetch orders
       onClose();
     } catch (err) {
       notifications.show({
@@ -48,6 +52,31 @@ export default function OrderDetailModal({ opened, onClose, order }) {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
+    });
+  };
+
+  const handlePayNow = () => {
+    setShowPayment(true);
+  };
+
+  const handlePaymentSuccess = (orderId) => {
+    console.log('✅ Payment successful for order:', orderId);
+    setShowPayment(false);
+    if (refetchOrders) refetchOrders(); // ✅ Refetch orders
+    onClose();
+    notifications.show({
+      title: 'Success',
+      message: 'Payment completed successfully!',
+      color: 'green',
+    });
+  };
+
+  const handlePaymentError = (error) => {
+    console.error('Payment failed:', error);
+    notifications.show({
+      title: 'Error',
+      message: 'Payment failed. Please try again.',
+      color: 'red',
     });
   };
 
@@ -78,10 +107,10 @@ export default function OrderDetailModal({ opened, onClose, order }) {
           maxHeight: '100vh',
         },
         inner: {
-      display: 'flex',
-      alignItems: 'end',
-      justifyContent: 'center',
-    },
+          display: 'flex',
+          alignItems: 'end',
+          justifyContent: 'center',
+        },
       }}
     >
       <Stack gap="md">
@@ -89,9 +118,7 @@ export default function OrderDetailModal({ opened, onClose, order }) {
         <OrderStatus order={order} formatDate={formatDate} />
         
         <Grid>
-
           <CustomerInfo order={order} />
-
           <ShippingAddress order={order} />
         </Grid>
 
@@ -104,7 +131,19 @@ export default function OrderDetailModal({ opened, onClose, order }) {
             isLoading={isLoading} 
           />
         )}
+
+        {!isAdmin && order.payment_status === 'Pending' && (
+          < PaymentPayHere
+            showPayment={showPayment}
+            handlePayNow={handlePayNow}
+            order={order}
+            handlePaymentSuccess={handlePaymentSuccess}
+            handlePaymentError={handlePaymentError}
+          />
+        )}
       </Stack>
     </Modal>
   );
 }
+
+

@@ -10,7 +10,12 @@ const routers = express.Router();
 
 routers.get('/', productController.getAllProducts);
 routers.get('/:id', productController.getProduct);
-routers.patch('/:id', protect, admin, upload.single('image'), productController.updateProduct);
+routers.patch('/:id',
+    protect,
+    admin,
+    upload.single('image'),
+    productController.updateProduct);
+    
 routers.delete('/:id',protect, admin, productController.deletePrduct);
 
 routers.post('/',

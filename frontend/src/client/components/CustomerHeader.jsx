@@ -3,7 +3,6 @@ import {
   AppShell,
   Group,
   ActionIcon,
-  TextInput,
   Indicator,
   Menu,
   Avatar,
@@ -14,10 +13,9 @@ import {
   ThemeIcon,
   Box,
 } from '@mantine/core';
+
 import {
-  IconSearch,
   IconShoppingCart,
-  IconUser,
   IconHistory,
   IconLogout,
   IconChefHat,
@@ -35,8 +33,6 @@ export default function CustomerHeader() {
   const cartCount = cartItems.length;
   const { data: user } = useGetProfileQuery();
   const [logout] = useLogoutMutation();
-  const [searchValue, setSearchValue] = useState('');
-  const [isSearchActive, setIsSearchActive] = useState(false);
   
 
   const handleLogout = async () => {
@@ -53,61 +49,18 @@ export default function CustomerHeader() {
       <Group style={{ height: '100%' }} px="md" justify="space-between" wrap="nowrap">
         {/* Left Section - Logo */}
         <Group wrap="nowrap" gap="xs">
-          <Group gap="xs" style={{ cursor: 'pointer' }} onClick={() => navigate('/customer/home')}>
-            <ThemeIcon color="blue" size={30} radius="md">
-              <IconChefHat size={18} />
-            </ThemeIcon>
-            <Text fw={700} size="md" visibleFrom="xs">
-              FoodDash
-            </Text>
-          </Group>
+           <Group gap="xs" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>
+              <ThemeIcon color="blue" size={30}>
+                <IconChefHat size={20} />
+              </ThemeIcon>
+              <Text fw={700} size="lg" variant="gradient" gradient={{ from: 'blue', to: 'cyan' }}>
+                FoodDash
+              </Text>
+            </Group>
         </Group>
-
-        {/* Center Section - Search (Desktop) */}
-        <TextInput
-          placeholder="Search for food, restaurants..."
-          visibleFrom="md"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.currentTarget.value)}
-          leftSection={<IconSearch size={16} />}
-          styles={{
-            root: {
-              width: '100%',
-              maxWidth: 500,
-            },
-            input: {
-              borderRadius: theme.radius.xl,
-              background: theme.colors.gray[0],
-              border: 'none',
-              '&:focus': {
-                background: 'white',
-                border: `1px solid ${theme.colors.blue[4]}`,
-              },
-            },
-          }}
-        />
 
         {/* Right Section - Actions */}
         <Group gap="xs" wrap="nowrap">
-          <Box hiddenFrom="md">
-            {!isSearchActive ? (
-              <ActionIcon variant="subtle" color="gray" size="lg" onClick={() => setIsSearchActive(true)}>
-                <IconSearch size={20} />
-              </ActionIcon>
-            ) : (
-              <TextInput
-                placeholder="Search..."
-                autoFocus
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.currentTarget.value)}
-                style={{ width: 140 }}
-                size="xs"
-                onBlur={() => {
-                  setTimeout(() => setIsSearchActive(false), 150);
-                }}
-              />
-            )}
-          </Box>
 
           {/* Cart */}
            <CartDrawer opened={isCartOpen} onClose={() => setIsCartOpen(false)} />
@@ -154,9 +107,6 @@ export default function CustomerHeader() {
                 </Group>
               </Menu.Label>
               <Menu.Divider />
-              <Menu.Item leftSection={<IconUser size={16} />} component={Link} to="/customer/profile">
-                My Profile
-              </Menu.Item>
               <Menu.Item leftSection={<IconHistory size={16} />} component={Link} to="/customer/orders">
                 My Orders
               </Menu.Item>

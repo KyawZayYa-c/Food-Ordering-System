@@ -12,7 +12,7 @@ const ProtectedRoute = ({ allowedRole }) => {
   const userRole = response.data?.role; 
   
   if (allowedRole && userRole !== allowedRole) {
-      return userRole === 'admin' ? <Navigate to="/dashboard/overviews" replace /> : <Navigate to="/" replace />;
+      return userRole === 'admin' ? <Navigate to="/dashboard/products" replace /> : <Navigate to="/" replace />;
   }
 
   return <Outlet />; 

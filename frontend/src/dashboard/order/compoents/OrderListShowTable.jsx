@@ -24,11 +24,11 @@ export default function OrderListShow({ orders, handleViewOrder }) {
 
     // ✅ Order Status Priority
     const statusPriority = {
-        'Processing': 1,
-        'Shipped': 2,
-        'Delivered': 3,
-        'Cancelled': 4,
-        'Pending': 5,
+        'Processing': 2,
+        'Shipped': 3,
+        'Delivered': 4,
+        'Cancelled': 5,
+        'Pending': 1,
     };
 
     // ✅ Payment Status Priority (Paid first)

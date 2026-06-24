@@ -13,11 +13,9 @@ const userSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('User', userSchema);
-
-// models/User.js
-userSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
+userSchema.pre('deleteOne', { document: true, query: false }, async function() {
     const userId = this._id;
     await mongoose.model('Order').deleteMany({ customer: userId });
-    next();
 });
+
+module.exports = mongoose.model('User', userSchema);

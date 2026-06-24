@@ -15,7 +15,7 @@ export const store = configureStore({
 
     // Regular Reducers
     cart: cartReducer, 
-    auth: authReducer ,
+    auth: authReducer,
   },
   
   middleware: (getDefaultMiddleware) =>

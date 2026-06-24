@@ -52,8 +52,5 @@ export const {
   useGetAllOrdersQuery,
   useGetMyOrdersQuery,
   useUpdateOrderStatusMutation,
-  useGenerateHashMutation,
-  useGenHashMutation,
-  useHandleNotifyMutation,
   useDeleteOrderMutation
 } = orderApiSlice;
