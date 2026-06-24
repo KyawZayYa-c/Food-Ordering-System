@@ -82,6 +82,35 @@ const updatePaymentStatus = async (req, res, next) => {
     }
 };
 
+// backend/controllers/orderController.js
+const deleteOrder = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        
+        // ✅ အော်ဒါကို ရှာပါ
+        const order = await orderService.getOrderById(id);
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: 'Order not found'
+            });
+        }
+        
+        // ✅ Payment Paid ဖြစ်နေရင် မဖျက်ရအောင်
+        if (order.payment_status === 'Paid') {
+            return res.status(400).json({
+                success: false,
+                message: 'Cannot delete order with paid payment'
+            });
+        }
+        
+        await orderService.deleteOrder(id);
+        Msg(res, 'Order deleted successfully', null);
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 module.exports = {
     placeOrder,
@@ -89,5 +118,6 @@ module.exports = {
     getOrder,
     getMyOrders,
     updateStatus,
-    updatePaymentStatus
+    updatePaymentStatus,
+    deleteOrder
 };

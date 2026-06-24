@@ -37,6 +37,12 @@ const updateOrderStatus = async (orderId, status) => {
     return updatedOrder;
 };
 
+const deleteOrder = async (orderId) => {
+    const deletedOrder = await Order.findByIdAndDelete(orderId);
+    if (!deletedOrder) throw new Error("Order not found!");
+    return deletedOrder;
+};
+
 
 const updatePaymentStatus = async (orderId, status, paymentId) => {
     const updatedOrder = await Order.findByIdAndUpdate(
@@ -59,5 +65,5 @@ module.exports = {
     getOrderByUserId,
     updateOrderStatus,
     updatePaymentStatus,
-    
+    deleteOrder,
 }

@@ -22,9 +22,39 @@ export default function OrderListShow({ orders, handleViewOrder }) {
     const theme = useMantineTheme();
     const isMobile = useMediaQuery('(max-width: 768px)');
 
+    // ✅ Order Status Priority
+    const statusPriority = {
+        'Processing': 1,
+        'Shipped': 2,
+        'Delivered': 3,
+        'Cancelled': 4,
+        'Pending': 5,
+    };
+
+    // ✅ Payment Status Priority (Paid first)
+    const paymentPriority = {
+        'Paid': 1,
+        'Pending': 2,
+        'Failed': 3,
+    };
+
+    // ✅ Sort Orders: Payment Priority first, then Status Priority
+    const sortedOrders = [...orders].sort((a, b) => {
+        // First sort by Payment Status
+        const paymentA = paymentPriority[a.payment_status] || 999;
+        const paymentB = paymentPriority[b.payment_status] || 999;
+        if (paymentA !== paymentB) {
+            return paymentA - paymentB;
+        }
+        // Then sort by Order Status
+        const statusA = statusPriority[a.status] || 999;
+        const statusB = statusPriority[b.status] || 999;
+        return statusA - statusB;
+    });
+
     return (
         <Paper withBorder radius="md" shadow="sm" style={{ overflow: 'hidden' }}>
-            {/* Header - Fixed on top */}
+            {/* Header */}
             <Box 
                 p={isMobile ? 'sm' : 'md'} 
                 style={{ 
@@ -51,7 +81,7 @@ export default function OrderListShow({ orders, handleViewOrder }) {
                 </Group>
             </Box>
 
-            {/* Scrollable Area - Both X and Y */}
+            {/* Scrollable Area */}
             <ScrollArea 
                 style={{ 
                     width: '100%', 
@@ -182,16 +212,19 @@ export default function OrderListShow({ orders, handleViewOrder }) {
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.length === 0 ? (
+                            {sortedOrders.length === 0 ? (
                                 <tr>
                                     <td colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>
                                         <Text c="dimmed">No orders found</Text>
                                     </td>
                                 </tr>
                             ) : (
-                                orders.map((order) => (
+                                sortedOrders.map((order) => (
                                     <tr key={order._id} style={{
                                         borderBottom: `1px solid ${theme.colors.gray[2]}`,
+                                        background: order.payment_status === 'Paid' 
+                                            ? `rgba(0, 200, 0, 0.05)` 
+                                            : 'transparent',
                                     }}>
                                         <td style={{
                                             padding: isMobile ? '6px 4px' : '10px 12px',

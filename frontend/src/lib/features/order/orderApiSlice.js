@@ -37,28 +37,13 @@ export const orderApiSlice = createApi({
       }),
       invalidatesTags: ['AllOrders', 'MyOrders'],
     }),
-    generateHash: builder.mutation({
-    query: (hashData) => ({
-      url: '/orders/generate-hash',
-      method: 'POST',
-      body: hashData, // { order_id: '...', amount: ... }
-      }),
+    deleteOrder: builder.mutation({
+    query: (id) => ({
+        url: `/orders/${id}`,
+        method: 'DELETE',
     }),
-    genHash: builder.mutation({
-      query: (hashData) => ({
-        url: '/orders/start',
-        method: 'POST',
-        body: hashData, 
-      }),
-    }),
-
-    handleNotify: builder.mutation({
-      query: (notifyData) => ({
-        url: '/orders/notify',
-        method: 'POST',
-        body: notifyData,
-      }),
-    }),
+    invalidatesTags: ['AllOrders', 'MyOrders'],
+  }),
   }),
 });
 
@@ -70,4 +55,5 @@ export const {
   useGenerateHashMutation,
   useGenHashMutation,
   useHandleNotifyMutation,
+  useDeleteOrderMutation
 } = orderApiSlice;

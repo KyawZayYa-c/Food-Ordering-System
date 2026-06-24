@@ -16,16 +16,20 @@ import {
   Button,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { useGetMyOrdersQuery } from '../../lib/features/order/orderApiSlice';
-import { IconEye, IconHome, IconPackage } from '@tabler/icons-react';
+import { useGetMyOrdersQuery, useDeleteOrderMutation } from '../../lib/features/order/orderApiSlice';
+import { IconEye, IconHome, IconPackage, IconTrash } from '@tabler/icons-react';
 import OrderLoading from '../../components/OrderLoading';
 import ErrorDisplay from '../../components/ErrorDisplay';
 import OrderStatusBadge from '../../dashboard/order/compoents/OrderStatusBadge';
 import PaymentStatusBadge from '../../dashboard/order/compoents/PaymentStatusBadge';
 import OrderDetailModal from '../../dashboard/order/orderdetails/OrderDetailModal';
 import { useNavigate } from 'react-router-dom';
+import { notifications } from '@mantine/notifications';
+import { modals } from '@mantine/modals';
+
 export default function CustomerMyOrders() {
   const { data, isLoading, isError, refetch } = useGetMyOrdersQuery();
+  const [deleteOrder] = useDeleteOrderMutation();
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [modalOpened, setModalOpened] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -35,6 +39,48 @@ export default function CustomerMyOrders() {
   const handleViewOrder = (order) => {
     setSelectedOrder(order);
     setModalOpened(true);
+  };
+
+  const handleDeleteOrder = async (order) => {
+    // ✅ Payment Paid ဖြစ်ရင် မဖျက်ရအောင်
+    if (order.payment_status === 'Paid') {
+      notifications.show({
+        title: 'Cannot Delete',
+        message: 'This order has been paid and cannot be deleted.',
+        color: 'red',
+      });
+      return;
+    }
+
+    modals.openConfirmModal({
+      title: 'Delete Order',
+      centered: true,
+      children: (
+        <Text size="sm">
+          Are you sure you want to delete order <strong>#{order._id?.slice(-6).toUpperCase()}</strong>?
+          {order.payment_status === 'Pending' && ' This order has not been paid yet.'}
+        </Text>
+      ),
+      labels: { confirm: 'Delete', cancel: 'Cancel' },
+      confirmProps: { color: 'red' },
+      onConfirm: async () => {
+        try {
+          await deleteOrder(order._id).unwrap();
+          notifications.show({
+            title: 'Success',
+            message: `Order #${order._id?.slice(-6).toUpperCase()} deleted successfully.`,
+            color: 'green',
+          });
+          refetch();
+        } catch (err) {
+          notifications.show({
+            title: 'Error',
+            message: err?.data?.message || 'Failed to delete order.',
+            color: 'red',
+          });
+        }
+      },
+    });
   };
 
   // Loading
@@ -79,18 +125,20 @@ export default function CustomerMyOrders() {
                 {orders.length} orders
               </Badge>
             </Group>
-            <Text size="sm" c="dimmed">
-              Total: ${orders.reduce((sum, o) => sum + (o.total_amount || 0), 0).toFixed(2)}
-            </Text>
-            <Button
-        size="xs"
-        variant="light"
-        color="blue"
-        leftSection={<IconHome size={14} />}
-        onClick={() => navigate('/')}
-      >
-        Home
-      </Button>
+            <Group gap="sm" wrap="wrap">
+              <Text size="sm" c="dimmed">
+                Total: ${orders.reduce((sum, o) => sum + (o.total_amount || 0), 0).toFixed(2)}
+              </Text>
+              <Button
+                size="xs"
+                variant="light"
+                color="blue"
+                leftSection={<IconHome size={14} />}
+                onClick={() => navigate('/')}
+              >
+                Home
+              </Button>
+            </Group>
           </Group>
         </Box>
 
@@ -287,16 +335,31 @@ export default function CustomerMyOrders() {
                         textAlign: 'center',
                         verticalAlign: 'middle',
                       }}>
-                        <Tooltip label="View Details">
-                          <ActionIcon
-                            color="blue"
-                            variant="light"
-                            onClick={() => handleViewOrder(order)}
-                            size={isMobile ? 'sm' : 'md'}
-                          >
-                            <IconEye size={isMobile ? 16 : 18} />
-                          </ActionIcon>
-                        </Tooltip>
+                        <Group gap="xs" justify="center">
+                          <Tooltip label="View Details">
+                            <ActionIcon
+                              color="blue"
+                              variant="light"
+                              onClick={() => handleViewOrder(order)}
+                              size={isMobile ? 'sm' : 'md'}
+                            >
+                              <IconEye size={isMobile ? 16 : 18} />
+                            </ActionIcon>
+                          </Tooltip>
+                          
+                          {/* ✅ Delete Button - Payment Paid ဖြစ်ရင် disable */}
+                          <Tooltip label={order.payment_status === 'Paid' ? 'Cannot delete paid order' : 'Delete Order'}>
+                            <ActionIcon
+                              color="red"
+                              variant="light"
+                              onClick={() => handleDeleteOrder(order)}
+                              size={isMobile ? 'sm' : 'md'}
+                              disabled={order.payment_status === 'Paid'}
+                            >
+                              <IconTrash size={isMobile ? 16 : 18} />
+                            </ActionIcon>
+                          </Tooltip>
+                        </Group>
                       </td>
                     </tr>
                   ))}

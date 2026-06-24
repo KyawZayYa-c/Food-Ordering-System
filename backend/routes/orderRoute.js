@@ -12,6 +12,7 @@ routes.get('/my-order', protect, orderController.getMyOrders);
 routes.get('/:id',  orderController.getOrder);
 routes.patch('/:id/status', protect, orderController.updateStatus);
 routes.patch('/:id/payment-status', protect, orderController.updatePaymentStatus);
+routes.delete('/:id', protect, admin, orderController.deleteOrder);
 
 
 module.exports = routes;
