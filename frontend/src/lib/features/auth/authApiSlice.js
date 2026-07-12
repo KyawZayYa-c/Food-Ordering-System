@@ -54,6 +54,7 @@ export const authApiSlice = createApi({
         try {
           await queryFulfilled;
           dispatch(logoutAction());
+          dispatch(authApiSlice.util.resetApiState());
         } catch (err) {
           console.error('Logout error:', err);
         }

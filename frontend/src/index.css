@@ -27,26 +27,23 @@ body {
   background-color: #f8f9fa;
 }
 
+
 @keyframes pulse {
-  0% {
+  0%, 100% {
     transform: scale(1);
-    box-shadow: 0 8px 32px rgba(34, 139, 230, 0.3);
+    box-shadow: 0 4px 15px rgba(34, 139, 230, 0.2);
   }
   50% {
-    transform: scale(1.05);
-    box-shadow: 0 8px 48px rgba(34, 139, 230, 0.5);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 8px 32px rgba(34, 139, 230, 0.3);
+    transform: scale(1.06);
+    box-shadow: 0 4px 20px rgba(34, 139, 230, 0.4);
   }
 }
 
 @keyframes bounce {
-  0%, 100% {
-    opacity: 1;
+  0% {
+    opacity: 0.4;
   }
-  50% {
-    opacity: 0.5;
+  100% {
+    opacity: 1;
   }
 }
