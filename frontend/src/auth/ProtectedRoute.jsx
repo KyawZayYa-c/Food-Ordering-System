@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useGetProfileQuery } from '../lib/features/auth/authApiSlice';
-import { Center, Loader, Stack, Text, ThemeIcon, Paper } from '@mantine/core';
+import {  Loader, Stack, Text, ThemeIcon, Box, Container } from '@mantine/core';
 import { IconChefHat } from '@tabler/icons-react';
 
 const ProtectedRoute = ({ allowedRole }) => {
@@ -8,44 +8,56 @@ const ProtectedRoute = ({ allowedRole }) => {
 
   if (isLoading) {
     return (
-      <Center style={{ minHeight: '100vh', width: '100%' }}>
-        <Paper 
-          withBorder 
-          p="xl" 
-          radius="lg" 
-          shadow="xl"
-          style={{
-            background: 'white',
-            textAlign: 'center',
-            maxWidth: 400,
-          }}
-        >
-          <Stack align="center" gap="md">
+      <Box 
+        style={{ 
+          minHeight: '100vh', 
+          width: '100%',
+          background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Container size="sm">
+          <Stack align="center" gap="xl" py={50}>
             <ThemeIcon 
-              size={70} 
+              size={100} 
               radius="xl" 
               color="blue"
               style={{
                 background: 'linear-gradient(135deg, #228be6, #15aabf)',
                 animation: 'pulse 1.5s ease-in-out infinite',
+                boxShadow: '0 8px 32px rgba(34, 139, 230, 0.3)',
               }}
             >
-              <IconChefHat size={35} color="white" />
+              <IconChefHat size={50} color="white" />
             </ThemeIcon>
             
-            <Loader size="lg" type="dots" color="blue" />
-            
-            <Stack gap={0}>
-              <Text fw={700} size="lg" variant="gradient" gradient={{ from: 'blue', to: 'cyan' }}>
+            <Stack gap={8} align="center">
+              <Text 
+                fw={800} 
+                size={42} 
+                variant="gradient" 
+                gradient={{ from: 'blue', to: 'cyan' }}
+                style={{ letterSpacing: -1 }}
+              >
                 FoodDash
               </Text>
-              <Text size="sm" c="dimmed">
+              <Text size="md" c="dimmed" fw={500}>
                 Loading your account...
               </Text>
             </Stack>
+
+            <Loader size="xl" color="blue" />
+            
+            <Box ta="center">
+              <Text size="xs" c="dimmed" style={{ animation: 'bounce 2s infinite' }}>
+                ⚡ Please wait a moment
+              </Text>
+            </Box>
           </Stack>
-        </Paper>
-      </Center>
+        </Container>
+      </Box>
     );
   }
 
