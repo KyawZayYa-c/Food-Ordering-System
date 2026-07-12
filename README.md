@@ -305,6 +305,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [x] Email Address: zayya4281@gmail.com
 - [x] Phone Number: 09797135914
 - [x] GitHub Repository Link: [[Link](https://github.com/KyawZayYa-c/Food-Ordering-System)]
+- [x] Demo WebApp Link: [[Live Demo](https://food-ordering-system-three-mu.vercel.app)]
 - [x] Demo Video Link: [[Link](https://drive.google.com/file/d/1ahtf56XBYtI7G4Nwu6iiBbpERxoUwAi6/view?usp=sharing)]
 
 ---
